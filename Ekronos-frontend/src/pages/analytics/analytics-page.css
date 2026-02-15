@@ -1,0 +1,221 @@
+:root{
+  --bg: #05080f;
+  --panel: rgba(255,255,255,0.03);
+  --stroke: rgba(255,255,255,0.10);
+  --stroke2: rgba(255,255,255,0.08);
+
+  --text: rgba(255,255,255,0.93);
+  --muted: rgba(148,163,184,0.86);
+  --muted2: rgba(148,163,184,0.72);
+
+  --accent: #22d3ee;
+  --accent2:#38bdf8;
+
+  --shadow: 0 22px 70px rgba(0,0,0,0.60);
+  --shadow2: 0 14px 40px rgba(0,0,0,0.48);
+}
+
+.an{
+  width: 100%;
+  min-height: 100%;
+  background: var(--bg);
+  position: relative;
+  overflow: hidden;
+}
+
+.an::before{
+  content:"";
+  position:absolute;
+  inset:-40%;
+  background:
+    radial-gradient(820px 620px at 10% 0%, rgba(34,211,238,0.10), transparent 60%),
+    radial-gradient(900px 700px at 85% 20%, rgba(124,58,237,0.08), transparent 62%),
+    radial-gradient(900px 650px at 70% 85%, rgba(34,211,238,0.06), transparent 65%);
+  filter: blur(8px);
+  pointer-events:none;
+}
+
+.an__inner{
+  position:relative;
+  z-index:1;
+  max-width: 1280px;
+  padding: 34px 32px 64px;
+}
+
+/* header */
+.an__head{
+  margin-bottom: 22px;
+}
+
+.an__title{
+  margin:0;
+  font-size: 44px;
+  font-weight: 900;
+  letter-spacing: -0.03em;
+  color: var(--text);
+}
+
+.an__sub{
+  margin: 10px 0 0;
+  font-size: 18px;
+  color: rgba(148,163,184,0.88);
+}
+
+/* stats */
+.an__stats{
+  margin-top: 22px;
+  display:grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 18px;
+}
+
+.anStat{
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.10);
+  border-radius: 18px;
+  box-shadow: var(--shadow2);
+
+  padding: 18px;
+  display:flex;
+  align-items:center;
+  gap: 14px;
+  position: relative;
+  overflow:hidden;
+}
+
+.anStat::before{
+  content:"";
+  position:absolute;
+  inset:-1px;
+  background: linear-gradient(135deg, rgba(34,211,238,0.10), rgba(124,58,237,0.06), rgba(34,211,238,0.06));
+  opacity: 0.22;
+  pointer-events:none;
+  mask-image: radial-gradient(closest-side at 14% 30%, rgba(0,0,0,1), transparent 70%);
+}
+
+.anStat__icon{
+  width: 44px;
+  height: 44px;
+  border-radius: 14px;
+
+  display:grid;
+  place-items:center;
+
+  color: var(--accent);
+  background: rgba(34,211,238,0.08);
+  border: 1px solid rgba(34,211,238,0.16);
+  position: relative;
+}
+
+.anStat__meta{
+  position:relative;
+  display:flex;
+  flex-direction:column;
+  line-height:1.05;
+}
+
+.anStat__value{
+  font-size: 28px;
+  font-weight: 900;
+  letter-spacing: -0.02em;
+  color: rgba(255,255,255,0.95);
+}
+
+.anStat__label{
+  margin-top: 8px;
+  font-size: 14px;
+  color: rgba(148,163,184,0.85);
+}
+
+/* chart card */
+.anChartCard{
+  margin-top: 22px;
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.10);
+  border-radius: 18px;
+  box-shadow: var(--shadow);
+  padding: 22px 22px 18px;
+  position: relative;
+  overflow:hidden;
+}
+
+.anChartCard::before{
+  content:"";
+  position:absolute;
+  inset:-1px;
+  background: linear-gradient(135deg, rgba(34,211,238,0.10), rgba(124,58,237,0.06), rgba(34,211,238,0.06));
+  opacity: 0.18;
+  pointer-events:none;
+  mask-image: radial-gradient(closest-side at 16% 18%, rgba(0,0,0,1), transparent 72%);
+}
+
+.anChartCard__top{
+  position: relative;
+  margin-bottom: 10px;
+}
+
+.anChartCard__title{
+  margin: 0;
+  font-size: 30px;
+  font-weight: 900;
+  letter-spacing: -0.02em;
+  color: rgba(255,255,255,0.95);
+}
+
+/* chart */
+.anChart{
+  position: relative;
+  border-radius: 14px;
+  overflow: hidden;
+}
+
+.anChart__svg{
+  width: 100%;
+  height: auto;
+  display:block;
+}
+
+/* grid lines */
+.anChart__gridLine{
+  stroke: rgba(255,255,255,0.10);
+  stroke-dasharray: 4 6;
+}
+.anChart__gridLineV{
+  stroke: rgba(255,255,255,0.08);
+  stroke-dasharray: 4 6;
+}
+
+/* labels */
+.anChart__yLabel{
+  fill: rgba(148,163,184,0.75);
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.anChart__xLabel{
+  fill: rgba(148,163,184,0.75);
+  font-size: 14px;
+  font-weight: 700;
+}
+
+/* line + area */
+.anChart__line{
+  stroke: #22d3ee;
+  stroke-width: 3;
+  fill: none;
+  filter: drop-shadow(0 0 8px rgba(34,211,238,0.20));
+}
+
+.anChart__area{
+  fill: rgba(34,211,238,0.12);
+}
+
+/* responsive */
+@media (max-width: 1100px){
+  .an__stats{ grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 640px){
+  .an__inner{ padding: 26px 18px 52px; }
+  .an__title{ font-size: 34px; }
+  .anChartCard__title{ font-size: 24px; }
+}

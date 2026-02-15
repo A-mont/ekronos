@@ -1,0 +1,242 @@
+:root{
+  --bg: #05080f;
+  --panel: rgba(255,255,255,0.03);
+  --stroke: rgba(255,255,255,0.10);
+  --stroke2: rgba(255,255,255,0.08);
+
+  --text: rgba(255,255,255,0.93);
+  --muted: rgba(148,163,184,0.86);
+  --muted2: rgba(148,163,184,0.72);
+
+  --accent: #22d3ee;
+  --accent2:#38bdf8;
+
+  --shadow: 0 22px 70px rgba(0,0,0,0.60);
+  --shadow2: 0 14px 40px rgba(0,0,0,0.48);
+}
+
+.set{
+  width: 100%;
+  min-height: 100%;
+  background: var(--bg);
+  position: relative;
+  overflow: hidden;
+}
+
+.set::before{
+  content:"";
+  position:absolute;
+  inset:-40%;
+  background:
+    radial-gradient(820px 620px at 10% 0%, rgba(34,211,238,0.10), transparent 60%),
+    radial-gradient(900px 700px at 85% 20%, rgba(124,58,237,0.08), transparent 62%),
+    radial-gradient(900px 650px at 70% 85%, rgba(34,211,238,0.06), transparent 65%);
+  filter: blur(8px);
+  pointer-events:none;
+}
+
+.set__inner{
+  position:relative;
+  z-index:1;
+  max-width: 1280px;
+  padding: 34px 32px 64px;
+}
+
+/* Header */
+.set__head{
+  margin-bottom: 22px;
+}
+
+.set__title{
+  margin:0;
+  font-size: 44px;
+  font-weight: 900;
+  letter-spacing: -0.03em;
+  color: var(--text);
+}
+
+.set__sub{
+  margin: 10px 0 0;
+  font-size: 18px;
+  color: rgba(148,163,184,0.88);
+}
+
+/* Card */
+.setCard{
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.10);
+  border-radius: 18px;
+  box-shadow: var(--shadow);
+  padding: 28px;
+  position: relative;
+  overflow: hidden;
+}
+
+.setCard--spaced{
+  margin-top: 22px;
+}
+
+.setCard::before{
+  content:"";
+  position:absolute;
+  inset:-1px;
+  background: linear-gradient(135deg, rgba(34,211,238,0.10), rgba(124,58,237,0.06), rgba(34,211,238,0.06));
+  opacity: 0.16;
+  pointer-events:none;
+  mask-image: radial-gradient(closest-side at 16% 18%, rgba(0,0,0,1), transparent 72%);
+}
+
+.setCard__top{
+  position: relative;
+  margin-bottom: 18px;
+}
+
+.setCard__title{
+  margin:0;
+  font-size: 30px;
+  font-weight: 900;
+  letter-spacing: -0.02em;
+  color: rgba(255,255,255,0.95);
+}
+
+.setCard__desc{
+  margin: 10px 0 0;
+  color: rgba(148,163,184,0.82);
+  font-size: 16px;
+}
+
+/* Form */
+.setForm{
+  position: relative;
+  max-width: 560px;
+}
+
+.setField{
+  margin-top: 16px;
+}
+
+.setLabel{
+  display:block;
+  font-size: 16px;
+  font-weight: 800;
+  color: rgba(255,255,255,0.92);
+  margin-bottom: 10px;
+}
+
+.setInput{
+  width: 100%;
+  padding: 14px 14px;
+  border-radius: 14px;
+  border: 1px solid rgba(255,255,255,0.08);
+  background: rgba(255,255,255,0.03);
+  color: rgba(255,255,255,0.92);
+  font-size: 16px;
+  outline: none;
+}
+
+.setInput:focus-visible{
+  box-shadow: 0 0 0 1px rgba(34,211,238,0.18) inset, 0 0 0 3px rgba(34,211,238,0.10);
+}
+
+/* Save button */
+.setBtn{
+  margin-top: 18px;
+  padding: 14px 18px;
+  border-radius: 14px;
+
+  background: linear-gradient(135deg, var(--accent), var(--accent2));
+  color: #06131c;
+
+  font-weight: 900;
+  font-size: 15px;
+  border: 1px solid rgba(255,255,255,0.10);
+  box-shadow: 0 18px 40px rgba(34,211,238,0.18);
+  cursor: pointer;
+
+  transition: transform 160ms ease, box-shadow 160ms ease, filter 160ms ease;
+}
+
+.setBtn:hover{
+  transform: translateY(-1px);
+  box-shadow: 0 24px 54px rgba(34,211,238,0.26);
+  filter: brightness(1.02);
+}
+
+/* Notifications list */
+.setList{
+  position: relative;
+  margin-top: 10px;
+}
+
+.setRow{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap: 16px;
+  padding: 16px 0;
+}
+
+.setRow__left{
+  min-width: 0;
+}
+
+.setRow__title{
+  font-size: 16px;
+  font-weight: 900;
+  color: rgba(255,255,255,0.92);
+}
+
+.setRow__sub{
+  margin-top: 6px;
+  font-size: 15px;
+  color: rgba(148,163,184,0.82);
+}
+
+.setDivider{
+  height: 1px;
+  background: rgba(255,255,255,0.08);
+}
+
+/* Switch */
+.sw{
+  width: 56px;
+  height: 30px;
+  border-radius: 999px;
+  border: 1px solid rgba(255,255,255,0.10);
+  background: rgba(0,0,0,0.35);
+  position: relative;
+  cursor: pointer;
+  transition: background 160ms ease, border-color 160ms ease, box-shadow 160ms ease;
+  flex: 0 0 auto;
+}
+
+.sw__knob{
+  position:absolute;
+  top: 50%;
+  left: 4px;
+  transform: translateY(-50%);
+  width: 22px;
+  height: 22px;
+  border-radius: 999px;
+  background: rgba(255,255,255,0.88);
+  transition: left 160ms ease, background 160ms ease;
+}
+
+.sw.is-on{
+  background: rgba(34,211,238,0.18);
+  border-color: rgba(34,211,238,0.24);
+  box-shadow: 0 0 0 3px rgba(34,211,238,0.10);
+}
+
+.sw.is-on .sw__knob{
+  left: calc(100% - 26px);
+  background: rgba(34,211,238,0.95);
+}
+
+/* Responsive */
+@media (max-width: 640px){
+  .set__inner{ padding: 26px 18px 52px; }
+  .set__title{ font-size: 34px; }
+  .setCard{ padding: 22px; }
+  .setForm{ max-width: 100%; }
+}
