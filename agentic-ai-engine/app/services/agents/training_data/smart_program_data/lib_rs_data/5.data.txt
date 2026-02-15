@@ -1,0 +1,31 @@
+
+// lib.rs example for extended Vnft Program.
+
+#![no_std]
+
+use sails_rs::{cell::RefCell, prelude::*};
+
+pub mod services;
+
+use services::service::{Market, MarketService};
+
+pub struct Program {
+    market: RefCell<Market>,
+}
+
+#[program]
+impl Program {
+    pub fn new(admin_id: ActorId) -> Self {
+        Self {
+            market: RefCell::new(Market {
+                admin_id,
+                ..Default::default()
+            }),
+        }
+    }
+
+    #[export(route = "market")]
+    pub fn market(&self) -> MarketService<'_> {
+        MarketService::new(&self.market)
+    }
+}

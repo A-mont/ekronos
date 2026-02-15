@@ -1,0 +1,37 @@
+
+
+// services.rs for Oracle example
+
+use sails_rs::{cell::RefCell, prelude::*};
+
+pub struct OracleService<'a> {
+    price: &'a RefCell<u128>,
+}
+
+impl<'a> OracleService<'a> {
+    pub fn new(price: &'a RefCell<u128>) -> Self {
+        Self { price }
+    }
+
+    fn get_mut_price(&self) -> core::cell::RefMut<'_, u128> {
+        self.price.borrow_mut()
+    }
+
+    fn get_price_ref(&self) -> core::cell::Ref<'_, u128> {
+        self.price.borrow()
+    }
+}
+
+#[service]
+impl<'a> OracleService<'a> {
+   
+    #[export(route = "update_price")]
+    pub fn update_price(&mut self, new_price: u128) {
+        *self.get_mut_price() = new_price;
+    }
+
+    #[export(route = "get_price")]
+    pub fn get_price(&self) -> u128 {
+        *self.get_price_ref()
+    }
+}

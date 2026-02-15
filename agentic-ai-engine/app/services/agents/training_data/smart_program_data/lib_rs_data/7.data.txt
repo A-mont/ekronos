@@ -1,0 +1,32 @@
+
+// lib.rs example for Program.
+
+#![no_std]
+
+use sails_rs::{cell::RefCell, prelude::*};
+
+pub mod services;
+
+use services::service::{HelloService, HelloState};
+
+pub struct Program {
+    state: RefCell<HelloState>,
+}
+
+#[program]
+impl Program {
+    pub fn new() -> Self {
+        Self {
+            state: RefCell::new(HelloState {
+                greeting: "Hello World from Vara Network!".to_string(),
+                user_greetings: Default::default(),
+                counter: 0,
+            }),
+        }
+    }
+
+    #[export(route = "hello")]
+    pub fn hello(&self) -> HelloService<'_> {
+        HelloService::new(&self.state)
+    }
+}

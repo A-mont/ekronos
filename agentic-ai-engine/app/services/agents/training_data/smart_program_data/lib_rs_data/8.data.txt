@@ -1,0 +1,43 @@
+
+// lib.rs example for Lending.
+
+#![no_std]
+
+use sails_rs::{cell::RefCell, prelude::*};
+
+pub mod services;
+
+use services::service::{LendingService, LendingState};
+
+pub struct Program {
+    state: RefCell<LendingState>,
+}
+
+#[program]
+impl Program {
+    pub fn new(
+        collateral_token: ActorId,
+        debt_token: ActorId,
+        base_interest_rate: u128,
+        min_loan: u128,
+        max_loan: u128,
+    ) -> Self {
+        Self {
+            state: RefCell::new(LendingState {
+                owner: msg::source(),
+                collateral_token,
+                debt_token,
+                base_interest_rate,
+                min_loan,
+                max_loan,
+                ..Default::default()
+            }),
+        }
+    }
+
+    #[export(route = "lending")]
+    pub fn lending(&self) -> LendingService<'_> {
+        LendingService::new(&self.state)
+    }
+}
+

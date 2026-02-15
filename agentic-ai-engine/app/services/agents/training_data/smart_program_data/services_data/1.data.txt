@@ -1,0 +1,69 @@
+// service.rs
+
+
+// Factory contract
+
+use ::gstd::prog::ProgramGenerator;
+use sails_rs::{cell::RefCell, prelude::*};
+
+pub struct Storage {
+    pub code_id: CodeId,
+}
+
+pub struct FactoryService<'a> {
+    storage: &'a RefCell<Storage>,
+}
+
+impl<'a> FactoryService<'a> {
+    pub fn new(storage: &'a RefCell<Storage>) -> Self {
+        Self { storage }
+    }
+
+    fn get(&self) -> core::cell::Ref<'_, Storage> {
+        self.storage.borrow()
+    }
+}
+
+#[derive(Debug)]
+pub enum FactoryError {
+    CreateProgramStartFailed,
+    CreateProgramReplyFailed,
+    EmitEventFailed,
+}
+
+#[event]
+#[derive(Debug, Clone, Encode, Decode, TypeInfo, PartialEq, Eq)]
+#[codec(crate = sails_rs::scale_codec)]
+#[scale_info(crate = sails_rs::scale_info)]
+pub enum FactoryEvents {
+    ProgramCreated(ActorId),
+}
+
+#[service(events = FactoryEvents)]
+impl<'a> FactoryService<'a> {
+    #[export(unwrap_result)]
+    pub async fn create_program(&mut self) -> Result<ActorId, FactoryError> {
+        let code_id = self.get().code_id;
+
+        let payload = ["New".encode(), ().encode()].concat();
+
+        let create_program_future =
+            ProgramGenerator::create_program_bytes_with_gas_for_reply(
+                code_id,
+                payload,
+                10_000_000_000,
+                0,
+                10_000_000_000,
+            )
+            .map_err(|_| FactoryError::CreateProgramStartFailed)?;
+
+        let (address, _) = create_program_future
+            .await
+            .map_err(|_| FactoryError::CreateProgramReplyFailed)?;
+
+        self.emit_event(FactoryEvents::ProgramCreated(address))
+            .map_err(|_| FactoryError::EmitEventFailed)?;
+
+        Ok(address)
+    }
+}

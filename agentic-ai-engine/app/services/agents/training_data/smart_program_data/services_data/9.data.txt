@@ -1,0 +1,205 @@
+
+// service.rs example
+use sails_rs::{
+    cell::RefCell,
+    prelude::*,
+    gstd::{msg, exec},
+    collections::HashMap,
+};
+
+/// Represents the stages an item can go through in the supply chain
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Encode, Decode, TypeInfo)]
+#[codec(crate = sails_rs::scale_codec)]
+#[scale_info(crate = sails_rs::scale_info)]
+pub enum Stage {
+    Created,
+    InTransit,
+    Delivered,
+}
+
+/// Struct that represents a product/item in the supply chain
+#[derive(Debug, Clone, Encode, Decode, TypeInfo)]
+#[codec(crate = sails_rs::scale_codec)]
+#[scale_info(crate = sails_rs::scale_info)]
+pub struct Item {
+    pub id: u64,
+    pub description: String,
+    pub owner: ActorId,
+    pub stage: Stage,
+    pub history: Vec<(u64, Stage, ActorId)>,
+}
+
+#[derive(Debug, Clone, Default)]
+pub struct SupplyChainState {
+    pub admins: Vec<ActorId>,
+    pub items: HashMap<u64, Item>,
+    pub next_id: u64,
+}
+
+#[derive(Encode, Decode, TypeInfo)]
+#[codec(crate = sails_rs::scale_codec)]
+#[scale_info(crate = sails_rs::scale_info)]
+pub struct IoSupplyChainState {
+    pub admins: Vec<ActorId>,
+    pub items: Vec<Item>,
+}
+
+impl From<SupplyChainState> for IoSupplyChainState {
+    fn from(value: SupplyChainState) -> Self {
+        Self {
+            admins: value.admins,
+            items: value.items.values().cloned().collect(),
+        }
+    }
+}
+
+#[derive(Encode, Decode, TypeInfo)]
+#[codec(crate = sails_rs::scale_codec)]
+#[scale_info(crate = sails_rs::scale_info)]
+pub enum Events {
+    ItemCreated(u64, ActorId),
+    StageAdvanced(u64, Stage, ActorId),
+    OwnershipTransferred(u64, ActorId, ActorId),
+}
+
+/// ✅ Service ligado al estado del Program
+pub struct SupplyChainService<'a> {
+    state: &'a RefCell<SupplyChainState>,
+}
+
+impl<'a> SupplyChainService<'a> {
+    pub fn new(state: &'a RefCell<SupplyChainState>) -> Self {
+        Self { state }
+    }
+
+    fn get(&self) -> core::cell::Ref<'_, SupplyChainState> {
+        self.state.borrow()
+    }
+
+    fn get_mut(&self) -> core::cell::RefMut<'_, SupplyChainState> {
+        self.state.borrow_mut()
+    }
+}
+
+#[service(events = Events)]
+impl<'a> SupplyChainService<'a> {
+    /// Adds a new supply chain item. Only admins can create items.
+    #[export]
+    pub fn create_item(&mut self, description: String, initial_owner: ActorId) -> Events {
+        let caller = msg::source();
+        let mut state = self.get_mut();
+
+        if !state.admins.contains(&caller) {
+            panic!("Only admins can create items");
+        }
+
+        let item_id = state.next_id;
+        state.next_id = state.next_id.saturating_add(1);
+
+        let item = Item {
+            id: item_id,
+            description,
+            owner: initial_owner,
+            stage: Stage::Created,
+            history: vec![(
+                exec::block_timestamp() as u64,
+                Stage::Created,
+                initial_owner,
+            )],
+        };
+
+        state.items.insert(item_id, item);
+
+        self.emit_event(Events::ItemCreated(item_id, initial_owner))
+            .expect("Event emission failed");
+
+        Events::ItemCreated(item_id, initial_owner)
+    }
+
+    /// Transfers item ownership to a new owner. Only current owner can transfer.
+    #[export]
+    pub fn transfer_item(&mut self, item_id: u64, new_owner: ActorId) -> Events {
+        let caller = msg::source();
+        let mut state = self.get_mut();
+
+        let item = state.items.get_mut(&item_id).expect("No such item");
+        if item.owner != caller {
+            panic!("Only the current owner can transfer the item");
+        }
+
+        let prev_owner = item.owner;
+        item.owner = new_owner;
+        item.history.push((
+            exec::block_timestamp() as u64,
+            item.stage,
+            new_owner,
+        ));
+
+        self.emit_event(Events::OwnershipTransferred(item_id, prev_owner, new_owner))
+            .expect("Event emission failed");
+
+        Events::OwnershipTransferred(item_id, prev_owner, new_owner)
+    }
+
+    /// Advances the stage of the item.
+    #[export]
+    pub fn advance_stage(&mut self, item_id: u64, next_stage: Stage) -> Events {
+        let caller = msg::source();
+        let mut state = self.get_mut();
+
+        let item = state.items.get_mut(&item_id).expect("No such item");
+        if item.owner != caller {
+            panic!("Only the item owner can advance the stage");
+        }
+
+        let valid = matches!(
+            (item.stage, next_stage),
+            (Stage::Created, Stage::InTransit)
+                | (Stage::InTransit, Stage::Delivered)
+        );
+
+        if !valid {
+            panic!("Invalid stage transition");
+        }
+
+        item.stage = next_stage;
+        item.history.push((
+            exec::block_timestamp() as u64,
+            next_stage,
+            caller,
+        ));
+
+        self.emit_event(Events::StageAdvanced(item_id, next_stage, caller))
+            .expect("Event emission failed");
+
+        Events::StageAdvanced(item_id, next_stage, caller)
+    }
+
+    #[export]
+    pub fn query_item(&self, item_id: u64) -> Option<Item> {
+        self.get().items.get(&item_id).cloned()
+    }
+
+    #[export]
+    pub fn query_items_by_owner(&self, owner: ActorId) -> Vec<Item> {
+        self.get()
+            .items
+            .values()
+            .filter(|item| item.owner == owner)
+            .cloned()
+            .collect()
+    }
+
+    #[export]
+    pub fn query_item_history(&self, item_id: u64) -> Option<Vec<(u64, Stage, ActorId)>> {
+        self.get()
+            .items
+            .get(&item_id)
+            .map(|item| item.history.clone())
+    }
+
+    #[export]
+    pub fn query_state(&self) -> IoSupplyChainState {
+        self.get().clone().into()
+    }
+}

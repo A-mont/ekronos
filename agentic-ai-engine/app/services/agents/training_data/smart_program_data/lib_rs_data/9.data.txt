@@ -1,0 +1,28 @@
+
+// lib.rs example for counter
+
+#![no_std]
+
+use sails_rs::{cell::RefCell, prelude::*};
+
+pub mod services;
+
+use services::service::{Service, State};
+
+pub struct Program {
+    state: RefCell<State>,
+}
+
+#[program]
+impl Program {
+    pub fn new() -> Self {
+        Self {
+            state: RefCell::new(State::default()),
+        }
+    }
+
+    #[export(route = "service")]
+    pub fn service(&self) -> Service<'_> {
+        Service::new(&self.state)
+    }
+}

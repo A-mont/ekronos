@@ -1,0 +1,182 @@
+
+// services.rs for NFT Marketplace example
+
+use sails_rs::{
+    prelude::*,
+    cell::RefCell,
+    gstd::msg,
+    collections::{HashMap, HashSet},
+};
+
+pub type ContractId = ActorId;
+pub type TokenId = U256;
+pub type Price = u128;
+
+pub const MINIMUM_VALUE: u64 = 1_000_000_000_000;
+
+// ================== DOMAIN TYPES ==================
+
+#[derive(Debug, Clone, PartialEq, Eq, Default)]
+pub struct Item {
+    pub frozen: bool,
+    pub token_id: TokenId,
+    pub owner: ActorId,
+    pub ft_contract_id: Option<ContractId>,
+    pub price: Option<Price>,
+    pub auction: Option<Auction>,
+    pub offers: Vec<((Option<ContractId>, Price), ActorId)>,
+}
+
+#[derive(Debug, PartialEq, Eq, Default, Clone, Encode, Decode, TypeInfo)]
+#[codec(crate = sails_rs::scale_codec)]
+#[scale_info(crate = sails_rs::scale_info)]
+pub struct Auction {
+    pub started_at: u64,
+    pub ended_at: u64,
+    pub current_price: Price,
+    pub current_winner: ActorId,
+}
+
+#[derive(Debug, Default, Clone)]
+pub struct Market {
+    pub admin_id: ActorId,
+    pub items: HashMap<(ContractId, TokenId), Item>,
+    pub approved_nft_contracts: HashSet<ActorId>,
+    pub approved_ft_contracts: HashSet<ActorId>,
+}
+
+// ================== IO TYPES ==================
+
+#[derive(Debug, Encode, Decode, TypeInfo)]
+#[codec(crate = sails_rs::scale_codec)]
+#[scale_info(crate = sails_rs::scale_info)]
+pub struct ItemState {
+    pub frozen: bool,
+    pub token_id: TokenId,
+    pub owner: ActorId,
+    pub ft_contract_id: Option<ContractId>,
+    pub price: Option<Price>,
+    pub auction: Option<Auction>,
+    pub offers: Vec<((Option<ContractId>, Price), ActorId)>,
+}
+
+#[derive(Debug, Encode, Decode, TypeInfo)]
+#[codec(crate = sails_rs::scale_codec)]
+#[scale_info(crate = sails_rs::scale_info)]
+pub struct MarketState {
+    pub admin_id: ActorId,
+    pub items: Vec<((ContractId, TokenId), ItemState)>,
+    pub approved_nft_contracts: Vec<ActorId>,
+    pub approved_ft_contracts: Vec<ActorId>,
+}
+
+impl From<Market> for MarketState {
+    fn from(m: Market) -> Self {
+        Self {
+            admin_id: m.admin_id,
+            items: m.items.into_iter().map(|(k, i)| {
+                (k, ItemState {
+                    frozen: i.frozen,
+                    token_id: i.token_id,
+                    owner: i.owner,
+                    ft_contract_id: i.ft_contract_id,
+                    price: i.price,
+                    auction: i.auction,
+                    offers: i.offers,
+                })
+            }).collect(),
+            approved_nft_contracts: m.approved_nft_contracts.into_iter().collect(),
+            approved_ft_contracts: m.approved_ft_contracts.into_iter().collect(),
+        }
+    }
+}
+
+// ================== EVENTS ==================
+
+#[derive(Debug, Encode, Decode, TypeInfo)]
+#[codec(crate = sails_rs::scale_codec)]
+#[scale_info(crate = sails_rs::scale_info)]
+pub enum MarketEvent {
+    NftContractAdded(ContractId),
+    FtContractAdded(ContractId),
+    NFTListed { nft_contract_id: ContractId, owner: ActorId, token_id: TokenId, price: Option<Price> },
+    MarketDataRemoved { owner: ActorId, nft_contract_id: ContractId, token_id: TokenId },
+    OfferAdded { nft_contract_id: ContractId, ft_contract_id: Option<ActorId>, token_id: TokenId, price: Price },
+    OfferAccepted { nft_contract_id: ContractId, token_id: TokenId, new_owner: ActorId, price: Price },
+    AuctionCreated { nft_contract_id: ContractId, token_id: TokenId, price: Price },
+    BidAdded { nft_contract_id: ContractId, token_id: TokenId, price: Price },
+    AuctionSettled { nft_contract_id: ContractId, token_id: TokenId, price: Price },
+}
+
+// ================== SERVICE ==================
+
+pub struct MarketService<'a> {
+    market: &'a RefCell<Market>,
+}
+
+impl<'a> MarketService<'a> {
+    pub fn new(market: &'a RefCell<Market>) -> Self {
+        Self { market }
+    }
+
+    fn get(&self) -> core::cell::Ref<'_, Market> {
+        self.market.borrow()
+    }
+
+    fn get_mut(&self) -> core::cell::RefMut<'_, Market> {
+        self.market.borrow_mut()
+    }
+}
+
+#[service(events = MarketEvent)]
+impl<'a> MarketService<'a> {
+    #[export]
+    pub fn add_nft_contract(&mut self, nft_contract_id: ContractId) {
+        let mut m = self.get_mut();
+        assert_eq!(msg::source(), m.admin_id, "Only admin");
+        m.approved_nft_contracts.insert(nft_contract_id);
+        self.emit_event(MarketEvent::NftContractAdded(nft_contract_id)).unwrap();
+    }
+
+    #[export]
+    pub fn add_ft_contract(&mut self, ft_contract_id: ContractId) {
+        let mut m = self.get_mut();
+        assert_eq!(msg::source(), m.admin_id, "Only admin");
+        m.approved_ft_contracts.insert(ft_contract_id);
+        self.emit_event(MarketEvent::FtContractAdded(ft_contract_id)).unwrap();
+    }
+
+    #[export]
+    pub fn list_item(
+        &mut self,
+        nft_contract_id: ContractId,
+        token_id: TokenId,
+        price: Option<Price>,
+        ft_contract_id: Option<ContractId>,
+    ) {
+        let caller = msg::source();
+        let mut m = self.get_mut();
+
+        let item = m.items.entry((nft_contract_id, token_id)).or_insert(Item {
+            owner: caller,
+            token_id,
+            ..Default::default()
+        });
+
+        assert_eq!(item.owner, caller, "Not owner");
+        item.price = price;
+        item.ft_contract_id = ft_contract_id;
+
+        self.emit_event(MarketEvent::NFTListed {
+            nft_contract_id,
+            owner: caller,
+            token_id,
+            price,
+        }).unwrap();
+    }
+
+    #[export]
+    pub fn query_state(&self) -> MarketState {
+        self.get().clone().into()
+    }
+}

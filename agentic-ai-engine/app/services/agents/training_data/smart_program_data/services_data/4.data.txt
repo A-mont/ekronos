@@ -1,0 +1,150 @@
+// services.rs for VFT Manager
+use sails_rs::{
+    prelude::*,
+    cell::RefCell,
+    gstd::msg,
+};
+use gstd::exec;
+use sails_rs::calls::{Call, Query};
+
+// Cliente VFT
+use crate::clients::extended_vft_client::traits::Vft;
+
+const ONE_TVARA: u128 = 1_000_000_000_000;
+
+// ================== STATE ==================
+
+#[derive(Default)]
+pub struct VFTManagerState {
+    pub admins: Vec<ActorId>,
+    pub vft_contract_id: Option<ActorId>,
+    pub min_tokens_to_add: u128,
+    pub max_tokens_to_burn: u128,
+    pub tokens_per_vara: u128,
+}
+
+impl VFTManagerState {
+    pub fn is_admin(&self, address: &ActorId) -> bool {
+        self.admins.contains(address)
+    }
+}
+
+// ================== SERVICE ==================
+
+pub struct VFTManagerService<'a, VftClient> {
+    state: &'a RefCell<VFTManagerState>,
+    pub vft_client: VftClient,
+}
+
+impl<'a, VftClient> VFTManagerService<'a, VftClient> {
+    pub fn new(state: &'a RefCell<VFTManagerState>, vft_client: VftClient) -> Self {
+        Self { state, vft_client }
+    }
+
+    fn get(&self) -> core::cell::Ref<'_, VFTManagerState> {
+        self.state.borrow()
+    }
+
+    fn get_mut(&self) -> core::cell::RefMut<'_, VFTManagerState> {
+        self.state.borrow_mut()
+    }
+}
+
+#[service]
+impl<'a, VftClient> VFTManagerService<'a, VftClient>
+where
+    VftClient: Vft,
+{
+    // ================== ADMIN ==================
+
+    #[export]
+    pub fn add_admin(&mut self, new_admin: ActorId) -> VFTManagerEvents {
+        let caller = msg::source();
+        let mut state = self.get_mut();
+
+        if !state.is_admin(&caller) {
+            return VFTManagerEvents::Error(VFTManagerErrors::OnlyAdminsCanDoThatAction);
+        }
+
+        state.admins.push(new_admin);
+        VFTManagerEvents::NewAdminAdded(new_admin)
+    }
+
+    #[export]
+    pub fn set_vft_contract_id(&mut self, vft_contract_id: ActorId) -> VFTManagerEvents {
+        let caller = msg::source();
+        let mut state = self.get_mut();
+
+        if !state.is_admin(&caller) {
+            return VFTManagerEvents::Error(VFTManagerErrors::OnlyAdminsCanDoThatAction);
+        }
+
+        state.vft_contract_id = Some(vft_contract_id);
+        VFTManagerEvents::VFTContractIdSet
+    }
+
+    #[export]
+    pub fn set_tokens_per_vara(&mut self, tokens_per_vara: u128) -> VFTManagerEvents {
+        let caller = msg::source();
+        let mut state = self.get_mut();
+
+        if !state.is_admin(&caller) {
+            return VFTManagerEvents::Error(VFTManagerErrors::OnlyAdminsCanDoThatAction);
+        }
+
+        state.tokens_per_vara = tokens_per_vara;
+        VFTManagerEvents::SetTokensPerVaras
+    }
+
+    // ================== TOKENS ==================
+
+    #[export]
+    pub async fn add_tokens_to_contract(&mut self, tokens: u128) -> VFTManagerEvents {
+        let caller = msg::source();
+        let state = self.get();
+
+        if !state.is_admin(&caller) {
+            return VFTManagerEvents::Error(VFTManagerErrors::OnlyAdminsCanDoThatAction);
+        }
+
+        let Some(vft_id) = state.vft_contract_id else {
+            return VFTManagerEvents::Error(VFTManagerErrors::VftContractIdNotSet);
+        };
+
+        let result = self
+            .vft_client
+            .mint(exec::program_id(), U256::from(tokens))
+            .send_recv(vft_id)
+            .await;
+
+        match result {
+            Ok(true) => VFTManagerEvents::TokensAdded,
+            _ => VFTManagerEvents::Error(VFTManagerErrors::OperationWasNotPerformed),
+        }
+    }
+
+    #[export]
+    pub async fn total_tokens_to_swap(&self) -> VFTManagerQueryEvents {
+        let state = self.get();
+
+        let Some(vft_id) = state.vft_contract_id else {
+            return VFTManagerQueryEvents::Error(VFTManagerErrors::VftContractIdNotSet);
+        };
+
+        let result = self
+            .vft_client
+            .balance_of(exec::program_id())
+            .recv(vft_id)
+            .await;
+
+        match result {
+            Ok(value) => VFTManagerQueryEvents::TotalTokensToSwap(value),
+            Err(_) => VFTManagerQueryEvents::Error(VFTManagerErrors::ErrorInVFTContract),
+        }
+    }
+
+    #[export]
+    pub fn tokens_to_swap_one_vara(&self) -> VFTManagerQueryEvents {
+        VFTManagerQueryEvents::TokensToSwapOneVara(self.get().tokens_per_vara)
+    }
+}

@@ -1,0 +1,92 @@
+
+// Service.rs for counter 
+
+use sails_rs::{
+    cell::{
+        RefCell,
+        Ref,
+        RefMut
+    },
+    prelude::*,
+};
+
+#[derive(Debug, Default, Clone)]
+pub struct State {
+    pub value: i64,
+}
+
+
+#[derive(Debug, Encode, Decode, TypeInfo, Clone, PartialEq, Eq)]
+#[codec(crate = sails_rs::scale_codec)]
+#[scale_info(crate = sails_rs::scale_info)]
+pub struct IoState {
+    pub value: i64,
+}
+
+impl From<State> for IoState {
+    fn from(state: State) -> Self {
+        Self { value: state.value }
+    }
+}
+
+#[event]
+#[derive(Debug, Encode, Decode, TypeInfo, Clone, PartialEq, Eq)]
+#[codec(crate = sails_rs::scale_codec)]
+#[scale_info(crate = sails_rs::scale_info)]
+pub enum ContractEvent {
+    Incremented(i64),
+    Decremented(i64),
+}
+
+pub struct Service<'a> {
+    state: &'a RefCell<State>,
+}
+
+impl<'a> Service<'a> {
+    pub fn new(state: &'a RefCell<State>) -> Self {
+        Self { state }
+    }
+
+    fn get(&self) -> Ref<'a, State> {
+        self.state.borrow()
+    }
+
+    fn get_mut(&self) -> RefMut<'a, State> {
+        self.state.borrow_mut()
+    }
+}
+
+#[service(events = ContractEvent)]
+impl<'a> Service<'a> {
+    /// Incrementa el valor en 1.
+    #[export]
+    pub fn increment(&mut self) -> ContractEvent {
+        let mut state = self.get_mut();
+        state.value = state.value.saturating_add(1);
+        let ev = ContractEvent::Incremented(state.value);
+        self.emit_event(ev.clone()).ok();
+        ev
+    }
+
+    /// Decrementa el valor en 1.
+    #[export]
+    pub fn decrement(&mut self) -> ContractEvent {
+        let mut state = self.get_mut();
+        state.value = state.value.saturating_sub(1);
+        let ev = ContractEvent::Decremented(state.value);
+        self.emit_event(ev.clone()).ok();
+        ev
+    }
+
+    /// Devuelve el valor actual del contador.
+    #[export]
+    pub fn get_value(&self) -> i64 {
+        self.get().value
+    }
+
+    /// Devuelve el estado completo.
+    #[export]
+    pub fn query_state(&self) -> IoState {
+        self.get().clone().into()
+    }
+}

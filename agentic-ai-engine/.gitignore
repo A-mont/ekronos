@@ -1,0 +1,22 @@
+# Configuración
+.env
+.env.*
+*.local
+
+
+# Editor / IDE
+.vscode/
+!.vscode/extensions.json
+.idea/
+.DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# Docker
+*.pid
+*.seed
+*.bak
+docker-compose.override.yml
