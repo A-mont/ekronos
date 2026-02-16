@@ -1,14 +1,12 @@
-[![Open in Gitpod](https://img.shields.io/badge/Open_in-Gitpod-white?logo=gitpod)]( https://gitpod.io/new/#https://github.com/Vara-Lab/Base-Smart-Contract.git)
+# Vft
 
-# Base smart contract
+Vara Fungible token factory for DEX usage.
 
-Base smart contract for [Vara Network](https://vara.network/) using Sails.
+This contract is responsible for creating VFT contracts and, at the same time, minting an initial amount of tokens to an address
 
 ## ⚙️ Settings
 
-### Rust: You need to have rust 1.88 to be able to compile your contract:
-
-> Note: GitPod will automatically execute these commands.
+### Rust: You need to have rust 1.91 to be able to compile your contract:
 
 - Install necessary rust version and components:
 
@@ -33,22 +31,6 @@ Contract crates:
 - `client`: This crate generates the contract client and incorporates it in its code, it can be used in tests.
 - `app`: Here goes all the business logic of the smart contract.
 
-    > **Note:**
-    > To avoid conflicts, it is recommended that you keep the "program" name (ContractProgram), everything else, such as services, state, etc. can change.
-
-### 📄 Generated files
-
-when you compile your smart contract, it will generate some files inside an `target/wasm32-gear/release` directory that you will need:
-
-- `contract_client.rs`: File to be used to send message to this smart contract.
-- `contract.idl`: File that contains detailed information about the application, including:
-    + *Types*: Custom types used within the program.
-    + *Constructors*: The program's constructor.
-    + *Services*: Commands and queries for all the services exposed by the program.
-    + *Events*: Events utilized within the program.
-- `contract.opt.wasm`: optimized WASM smart contract code.
-- `contract.wasm`: WASM smart contract code (use only the optimized one).
-
 ## 💻 Usage
 
 - 🏗️ `Compilation`: To build the contract execute:
@@ -57,46 +39,44 @@ when you compile your smart contract, it will generate some files inside an `tar
     cargo b -r
     ```
 
-- ✅ `Tests`: to tests your contract code you can execute:
-    - To do unit testing with Syscalls mocks (and cfg(test) in each service):
-        ```sh
-        cargo test -p contract-app
-        ```
+## ⚙️ initialization
 
-        or 
+When you are about to upload the contract in Gear Idea, you must assign the following data:
 
-        ```sh
-        cd app
-        cargo test
-        ```
+- code_id: contract vft code id
+- factory_admin_account: a list of admins for the vft factory
+- gas_for_program: gas limit to use for vft contract creation (you can use 10000000000)
+- registered_tokens: a list of vft listed in DEX
+- pool_factory_address: pool factory address to be able to create the contracts pair for vfts contracts
+- default_registered_token: Default address to use from the registered tokens to be used for pair creation.
 
-    - To run tests with gtest:
-        ```sh
-        cargo test -r
-        ```
+Initial payload example:
 
-    - To test your contract in Vara Network testnet:
-
-      ```sh
-      cargo test -r -- --ignored
-      ```
-
-    - In case that you write "println" macros in your gtest and gclient tests, to see your logs in your terminal you have to add the flag `-- --no-capture`, example:
-
-      ```sh
-      cargo test -r -- --no-capture
-      cargo test -r -- --ignored --no-capture
-      ```
-
-## Gitpod
-
-You can also program your smart contract from GitPod by clicking the following button (The necessary packages and dependencies will be installed automatically):
-
-<p align="center">
-  <a href="https://gitpod.io/#https://github.com/Vara-Lab/Base-Smart-Contract.git" target="_blank">
-    <img src="https://gitpod.io/button/open-in-gitpod.svg" width="240" alt="Gitpod">
-  </a>
-</p>
+```json
+{
+  "config": {
+      "code_id": "0xa96f56f17466a2da86a854881cfd74ea4c5ef2a4e0e846a7145794c5dd104d51", // vft code id
+      "factory_admin_account": [
+          "0x523dda1e177405c8d2a17b9fdb61e757f8b7a9fe01c281ff1329f5a38721a755"
+      ],
+      "gas_for_program": 10000000000,
+      "registered_tokens": [
+          {
+              "name": "Bridged Wrapped Ether",
+              "symbol": "WETH",
+              "address": "0xba764e2836b28806be10fe6f674d89d1e0c86898d25728f776588f03bddc6f58"
+          },
+          {
+              "name": "Vara Network Token",
+              "symbol": "TVARA",
+              "address": "0xd0f89cfd994c92bb743a5a69049609b796e2026e05318f7eef621a5e31df3d4b"
+          }
+      ],
+      "pool_factory_address": "0xaec14c514124fffa6c4b832ba7c12fa19e7fa663774c549c114786e220dd0a4e",
+      "default_registered_token": "0xd0f89cfd994c92bb743a5a69049609b796e2026e05318f7eef621a5e31df3d4b"
+  }
+}
+```
 
 ## Deploy the Contract on the IDEA Platform and Interact with Your Contract
 
