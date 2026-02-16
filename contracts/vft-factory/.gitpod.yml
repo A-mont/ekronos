@@ -1,0 +1,7 @@
+image: ghcr.io/vara-lab/base-smart-contract-gitpod:latest
+tasks:
+  - init: |
+      rustup install 1.91.0
+      rustup default 1.91.0
+      rustup target add wasm32v1-none
+      cargo build
