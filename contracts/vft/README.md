@@ -1,14 +1,10 @@
-[![Open in Gitpod](https://img.shields.io/badge/Open_in-Gitpod-white?logo=gitpod)]( https://gitpod.io/new/#https://github.com/Vara-Lab/Base-Smart-Contract.git)
+# Vft
 
-# Base smart contract
-
-Base smart contract for [Vara Network](https://vara.network/) using Sails.
+Vara Fungible token for DEX usage.
 
 ## ⚙️ Settings
 
-### Rust: You need to have rust 1.88 to be able to compile your contract:
-
-> Note: GitPod will automatically execute these commands.
+### Rust: You need to have rust 1.91 to be able to compile your contract:
 
 - Install necessary rust version and components:
 
@@ -36,19 +32,6 @@ Contract crates:
     > **Note:**
     > To avoid conflicts, it is recommended that you keep the "program" name (ContractProgram), everything else, such as services, state, etc. can change.
 
-### 📄 Generated files
-
-when you compile your smart contract, it will generate some files inside an `target/wasm32-gear/release` directory that you will need:
-
-- `contract_client.rs`: File to be used to send message to this smart contract.
-- `contract.idl`: File that contains detailed information about the application, including:
-    + *Types*: Custom types used within the program.
-    + *Constructors*: The program's constructor.
-    + *Services*: Commands and queries for all the services exposed by the program.
-    + *Events*: Events utilized within the program.
-- `contract.opt.wasm`: optimized WASM smart contract code.
-- `contract.wasm`: WASM smart contract code (use only the optimized one).
-
 ## 💻 Usage
 
 - 🏗️ `Compilation`: To build the contract execute:
@@ -57,46 +40,14 @@ when you compile your smart contract, it will generate some files inside an `tar
     cargo b -r
     ```
 
-- ✅ `Tests`: to tests your contract code you can execute:
-    - To do unit testing with Syscalls mocks (and cfg(test) in each service):
-        ```sh
-        cargo test -p contract-app
-        ```
+## ⚙️ initialization
 
-        or 
+When you are about to upload the contract in Gear Idea, you must assign the following data:
 
-        ```sh
-        cd app
-        cargo test
-        ```
-
-    - To run tests with gtest:
-        ```sh
-        cargo test -r
-        ```
-
-    - To test your contract in Vara Network testnet:
-
-      ```sh
-      cargo test -r -- --ignored
-      ```
-
-    - In case that you write "println" macros in your gtest and gclient tests, to see your logs in your terminal you have to add the flag `-- --no-capture`, example:
-
-      ```sh
-      cargo test -r -- --no-capture
-      cargo test -r -- --ignored --no-capture
-      ```
-
-## Gitpod
-
-You can also program your smart contract from GitPod by clicking the following button (The necessary packages and dependencies will be installed automatically):
-
-<p align="center">
-  <a href="https://gitpod.io/#https://github.com/Vara-Lab/Base-Smart-Contract.git" target="_blank">
-    <img src="https://gitpod.io/button/open-in-gitpod.svg" width="240" alt="Gitpod">
-  </a>
-</p>
+- name: Name of your vara fungible token
+- symbol: Symbol of your vara fungible token
+- decimals: Decimals that the VFT will use
+- admins: a list of address that can mint and burn tokens
 
 ## Deploy the Contract on the IDEA Platform and Interact with Your Contract
 
