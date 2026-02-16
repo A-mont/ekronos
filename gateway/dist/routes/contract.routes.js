@@ -1,0 +1,23 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const express_1 = require("express");
+const contract_controller_1 = require("../controllers/contract.controller");
+const auth_middleware_1 = require("../middleware/auth.middleware");
+const validation_middleware_1 = require("../middleware/validation.middleware");
+const router = (0, express_1.Router)();
+router.get('/health', contract_controller_1.ContractController.healthCheck);
+router.post('/create-program', auth_middleware_1.authenticateApiKey, validation_middleware_1.validateCreateProgram, contract_controller_1.ContractController.createProgram);
+router.post('/create-pool', auth_middleware_1.authenticateApiKey, validation_middleware_1.validateCreatePool, contract_controller_1.ContractController.createPool);
+router.post('/create-pool-with-registered-token', auth_middleware_1.authenticateApiKey, validation_middleware_1.validateCreatePoolWithRegisteredToken, contract_controller_1.ContractController.createPoolWithRegisteredToken);
+router.post('/create-program-and-pool', auth_middleware_1.authenticateApiKey, validation_middleware_1.validateCreateProgramAndPool, contract_controller_1.ContractController.createProgramAndPool);
+router.get('/admins', auth_middleware_1.authenticateApiKey, contract_controller_1.ContractController.getAdmins);
+router.get('/id-to-address', auth_middleware_1.authenticateApiKey, contract_controller_1.ContractController.getIdToAddress);
+router.get('/number', auth_middleware_1.authenticateApiKey, contract_controller_1.ContractController.getNumber);
+router.get('/registry', auth_middleware_1.authenticateApiKey, contract_controller_1.ContractController.getRegistry);
+router.get('/pool-factory-address', auth_middleware_1.authenticateApiKey, contract_controller_1.ContractController.getPoolFactoryAddress);
+router.get('/pair-address', auth_middleware_1.authenticateApiKey, contract_controller_1.ContractController.getPairAddress);
+router.get('/all-pairs', auth_middleware_1.authenticateApiKey, contract_controller_1.ContractController.getAllPairs);
+router.get('/fee-to', auth_middleware_1.authenticateApiKey, contract_controller_1.ContractController.getFeeTo);
+router.get('/treasury-id', auth_middleware_1.authenticateApiKey, contract_controller_1.ContractController.getTreasuryId);
+exports.default = router;
+//# sourceMappingURL=contract.routes.js.map
