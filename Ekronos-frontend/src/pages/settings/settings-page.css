@@ -240,3 +240,8 @@
   .setCard{ padding: 22px; }
   .setForm{ max-width: 100%; }
 }
+
+.sw:focus-visible{
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(34,211,238,0.28);
+}

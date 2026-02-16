@@ -1,0 +1,104 @@
+.mp {
+  min-height: 100%;
+  padding: 30px 24px;
+  background:
+    radial-gradient(900px 480px at 12% -10%, rgba(34, 211, 238, 0.12), transparent 62%),
+    radial-gradient(850px 560px at 90% 10%, rgba(59, 130, 246, 0.11), transparent 64%),
+    #05080f;
+  color: #e5eefc;
+}
+
+.mp__head h1 {
+  margin: 8px 0 0;
+  font-size: 38px;
+}
+
+.mp__head p {
+  margin-top: 8px;
+  color: #94a3b8;
+}
+
+.mp__kicker {
+  color: #22d3ee;
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.mp__tableWrap {
+  margin-top: 18px;
+  border: 1px solid rgba(148, 163, 184, 0.23);
+  border-radius: 16px;
+  overflow: auto;
+  background: rgba(8, 15, 31, 0.82);
+}
+
+.mp__table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 760px;
+}
+
+.mp__table th,
+.mp__table td {
+  text-align: left;
+  padding: 14px;
+  border-bottom: 1px solid rgba(148, 163, 184, 0.16);
+}
+
+.mp__table th {
+  color: #b9cced;
+  font-size: 12px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.mp__table td {
+  color: #dce8fd;
+  font-size: 14px;
+}
+
+.mp__projectName {
+  font-weight: 700;
+}
+
+.mp__projectId {
+  color: #8aa0c7;
+  font-size: 12px;
+  margin-top: 2px;
+}
+
+.mp__status {
+  display: inline-flex;
+  border-radius: 999px;
+  padding: 4px 10px;
+  font-size: 12px;
+  font-weight: 700;
+  border: 1px solid;
+}
+
+.mp__status.is-live {
+  border-color: rgba(34, 197, 94, 0.55);
+  background: rgba(34, 197, 94, 0.16);
+}
+
+.mp__status.is-beta {
+  border-color: rgba(245, 158, 11, 0.55);
+  background: rgba(245, 158, 11, 0.16);
+}
+
+.mp__status.is-planned {
+  border-color: rgba(59, 130, 246, 0.55);
+  background: rgba(59, 130, 246, 0.14);
+}
+
+@media (max-width: 640px) {
+  .mp {
+    padding: 20px 16px;
+  }
+
+  .mp__head h1 {
+    font-size: 30px;
+  }
+}

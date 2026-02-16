@@ -1,0 +1,15 @@
+# IDE
+.idea/
+.vscode/
+*.iml
+
+# Build and development artifacts
+dist/
+dev/
+**/dist/
+**/dev/
+
+# Environment files
+**/.env
+**/.env.*
+!Ekronos-frontend/.env.txt

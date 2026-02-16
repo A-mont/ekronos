@@ -1,4 +1,5 @@
 import React from "react";
+import { Card } from '@/components/ui/card';
 import "./ux-philosophy.css";
 
 type Step = {
@@ -27,9 +28,9 @@ const steps: Step[] = [
 
 export const UxPhilosophy = () => {
   return (
-    <section className="ux" id="how">
+    <section className="ux" id="how" data-reveal-section="ux">
       <div className="ux__inner">
-        <div className="ux__head">
+        <div className="ux__head reveal-will-change" data-reveal-item>
           <div className="ux__kicker">UX PHILOSOPHY</div>
           <h2 className="ux__title">Swap → Use App</h2>
           <p className="ux__sub">
@@ -41,14 +42,14 @@ export const UxPhilosophy = () => {
         <div className="ux__flow">
           {steps.map((s, idx) => (
             <React.Fragment key={s.num}>
-              <article className="uxCard">
+              <Card className="uxCard reveal-will-change" data-reveal-item>
                 <div className="uxCard__num">{s.num}</div>
                 <h3 className="uxCard__title">{s.title}</h3>
                 <p className="uxCard__desc">{s.desc}</p>
-              </article>
+              </Card>
 
               {idx < steps.length - 1 ? (
-                <div className="uxArrow" aria-hidden="true">
+                <div className="uxArrow reveal-will-change" aria-hidden="true" data-reveal-item>
                   <span>→</span>
                 </div>
               ) : null}
