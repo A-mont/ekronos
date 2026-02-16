@@ -1,6 +1,7 @@
 import React, { useMemo } from "react";
 import "./analytics-page.css";
 import { FiTrendingUp, FiDollarSign, FiUsers, FiCreditCard } from "react-icons/fi";
+import { Card } from '@/components/ui/card';
 
 type Stat = {
   icon: React.ReactNode;
@@ -36,7 +37,7 @@ export const AnalyticsPage = () => {
   const labels = useMemo(
     () => [
       "Feb 2","Feb 4","Feb 6","Feb 8","Feb 10","Feb 12","Feb 14","Feb 16",
-      "Feb 18","Feb 20","Feb 22","Feb 24","Feb 26","Feb 28","Feb 30",
+      "Feb 18","Feb 20","Feb 22","Feb 24","Feb 26","Feb 28","Mar 2",
     ],
     []
   );
@@ -93,18 +94,18 @@ export const AnalyticsPage = () => {
         {/* stats */}
         <div className="an__stats">
           {stats.map((s) => (
-            <div className="anStat" key={s.label}>
+            <Card className="anStat" key={s.label}>
               <div className="anStat__icon">{s.icon}</div>
               <div className="anStat__meta">
                 <div className="anStat__value">{s.value}</div>
                 <div className="anStat__label">{s.label}</div>
               </div>
-            </div>
+            </Card>
           ))}
         </div>
 
         {/* chart card */}
-        <div className="anChartCard">
+        <Card className="anChartCard">
           <div className="anChartCard__top">
             <h2 className="anChartCard__title">Total Value Locked</h2>
           </div>
@@ -174,7 +175,7 @@ export const AnalyticsPage = () => {
               })}
             </svg>
           </div>
-        </div>
+        </Card>
       </div>
     </section>
   );

@@ -1,4 +1,5 @@
 import React from "react";
+import { Button } from '@/components/ui/button';
 import "./creator-studio.css";
 import {
   FiPlusCircle,
@@ -71,12 +72,12 @@ export const CreatorStudio = () => {
             <p className="cs__sub">Manage your economies and launch new projects.</p>
           </div>
 
-          <button className="csBtn">
+          <Button type="button" className="csBtn">
             <span className="csBtn__icon" aria-hidden="true">
               <FiPlusCircle size={18} />
             </span>
             New Project
-          </button>
+          </Button>
         </div>
 
         {/* Stats */}

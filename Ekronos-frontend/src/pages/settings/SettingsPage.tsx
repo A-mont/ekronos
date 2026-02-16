@@ -1,32 +1,32 @@
-import React, { useState } from "react";
-import "./settings-page.css";
-import { FiBell } from "react-icons/fi";
+import { useState } from 'react';
+import { Switch } from '@base-ui-components/react/switch';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import './settings-page.css';
 
-const Switch = ({
-  checked,
-  onChange,
-  ariaLabel,
-}: {
+type SettingsSwitchProps = {
   checked: boolean;
-  onChange: (v: boolean) => void;
+  onChange: (nextValue: boolean) => void;
   ariaLabel: string;
-}) => {
+};
+
+const SettingsSwitch = ({ checked, onChange, ariaLabel }: SettingsSwitchProps) => {
   return (
-    <button
-      type="button"
-      className={`sw ${checked ? "is-on" : ""}`}
-      onClick={() => onChange(!checked)}
-      aria-pressed={checked}
+    <Switch.Root
+      checked={checked}
+      onCheckedChange={onChange}
       aria-label={ariaLabel}
+      className={`sw ${checked ? 'is-on' : ''}`}
     >
-      <span className="sw__knob" />
-    </button>
+      <Switch.Thumb className="sw__knob" />
+    </Switch.Root>
   );
 };
 
 export const SettingsPage = () => {
-  const [displayName, setDisplayName] = useState("Creator");
-  const [email, setEmail] = useState("creator@ekronos.xyz");
+  const [displayName, setDisplayName] = useState('Creator');
+  const [email, setEmail] = useState('creator@ekronos.xyz');
 
   const [deployAlerts, setDeployAlerts] = useState(true);
   const [riskWarnings, setRiskWarnings] = useState(true);
@@ -34,13 +34,11 @@ export const SettingsPage = () => {
   return (
     <section className="set">
       <div className="set__inner">
-        {/* Page header */}
         <header className="set__head">
           <h1 className="set__title">Settings</h1>
           <p className="set__sub">Manage your account and platform preferences.</p>
         </header>
 
-        {/* Profile card */}
         <div className="setCard">
           <div className="setCard__top">
             <h2 className="setCard__title">Profile</h2>
@@ -49,8 +47,13 @@ export const SettingsPage = () => {
 
           <div className="setForm">
             <div className="setField">
-              <label className="setLabel">Display Name</label>
-              <input
+              <Label htmlFor="displayName" className="setLabel">
+                Display Name
+              </Label>
+              <Input
+                id="displayName"
+                name="displayName"
+                autoComplete="name"
                 className="setInput"
                 value={displayName}
                 onChange={(e) => setDisplayName(e.target.value)}
@@ -58,21 +61,26 @@ export const SettingsPage = () => {
             </div>
 
             <div className="setField">
-              <label className="setLabel">Email</label>
-              <input
+              <Label htmlFor="email" className="setLabel">
+                Email
+              </Label>
+              <Input
+                id="email"
+                name="email"
+                type="email"
+                autoComplete="email"
                 className="setInput"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
               />
             </div>
 
-            <button className="setBtn" type="button">
+            <Button className="setBtn" type="button">
               Save Changes
-            </button>
+            </Button>
           </div>
         </div>
 
-        {/* Notifications card */}
         <div className="setCard setCard--spaced">
           <div className="setCard__top">
             <h2 className="setCard__title">Notifications</h2>
@@ -85,7 +93,7 @@ export const SettingsPage = () => {
                 <div className="setRow__title">Deploy Alerts</div>
                 <div className="setRow__sub">Get notified when a deployment completes.</div>
               </div>
-              <Switch
+              <SettingsSwitch
                 checked={deployAlerts}
                 onChange={setDeployAlerts}
                 ariaLabel="Toggle deploy alerts"
@@ -99,7 +107,7 @@ export const SettingsPage = () => {
                 <div className="setRow__title">Risk Warnings</div>
                 <div className="setRow__sub">Receive alerts for high-risk tokenomics changes.</div>
               </div>
-              <Switch
+              <SettingsSwitch
                 checked={riskWarnings}
                 onChange={setRiskWarnings}
                 ariaLabel="Toggle risk warnings"

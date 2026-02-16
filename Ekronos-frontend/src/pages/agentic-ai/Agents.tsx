@@ -1,5 +1,6 @@
 import { useMemo, useRef, useState } from "react";
 import { FiPlay, FiRefreshCcw, FiPower } from "react-icons/fi";
+import { Button } from '@/components/ui/button';
 import "./styles.css";
 
 type AgentName = "smart_program" | "frontend" | "server" | "indexer" | "economy";
@@ -252,12 +253,12 @@ function AgentWidget({
             <span className="mono">{state.status === "running" && liveLabel ? liveLabel : durationLabel}</span>
           </div>
 
-          <button className="icon-btn" onClick={onMaximize} title={maximized ? "Restore" : "Maximize"}>
+          <Button type="button" className="icon-btn" onClick={onMaximize} title={maximized ? "Restore" : "Maximize"}>
             ⤢
-          </button>
-          <button className="icon-btn icon-btn-danger" onClick={onClose} title="Hide widget">
+          </Button>
+          <Button type="button" className="icon-btn icon-btn-danger" onClick={onClose} title="Hide widget">
             ✕
-          </button>
+          </Button>
         </div>
       </div>
 
@@ -273,9 +274,9 @@ function AgentWidget({
       
       {maximized && showPRButton && (
         <div className="prRow">
-          <button className="prBtn" onClick={onCreatePR} disabled={creatingPR} title="Create PR in backend">
+          <Button type="button" className="prBtn" onClick={onCreatePR} disabled={creatingPR} title="Create PR in backend">
             {creatingPR ? "Creating PR…" : "Create PR"}
-          </button>
+          </Button>
           {prStatus ? <span className="mono prStatus">{prStatus}</span> : null}
         </div>
       )}
@@ -710,7 +711,8 @@ export default function Agents({ payload }: { payload: GenerationPayload }) {
 
           {/* ✅ Protagonist Run button */}
           <div className="actions-row actions-row-hero">
-            <button
+            <Button
+              type="button"
               className="runPrimary"
               disabled={!canRun}
               onClick={startStream}
@@ -723,25 +725,27 @@ export default function Agents({ payload }: { payload: GenerationPayload }) {
               <span className="runPrimary__text">
                 Run Agents
               </span>
-            </button>
+            </Button>
 
             <div className="actions-row-secondary">
-              <button
+              <Button
+                type="button"
                 className="btn btn-icon"
                 onClick={resetUI}
                 disabled={streamStatus === "connected" || streamStatus === "connecting"}
                 title="Reset"
               >
                 <FiRefreshCcw />
-              </button>
-              <button
+              </Button>
+              <Button
+                type="button"
                 className="btn btn-icon btn-danger"
                 onClick={disconnect}
                 disabled={streamStatus !== "connected" && streamStatus !== "connecting"}
                 title="Disconnect"
               >
                 <FiPower />
-              </button>
+              </Button>
             </div>
           </div>
 
@@ -765,9 +769,9 @@ export default function Agents({ payload }: { payload: GenerationPayload }) {
                 <div className="muted">None</div>
               ) : (
                 ALL_AGENTS.filter((a) => hidden[a]).map((a) => (
-                  <button key={a} className="chip" onClick={() => showWidget(a)}>
+                  <Button key={a} type="button" className="chip" onClick={() => showWidget(a)}>
                     + {TITLES[a]}
-                  </button>
+                  </Button>
                 ))
               )}
             </div>

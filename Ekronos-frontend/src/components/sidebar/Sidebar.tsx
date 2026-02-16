@@ -34,32 +34,23 @@ export const Sidebar = () => {
 
       {/* Top */}
       <div className="dsb__top">
-        <div
-          className="dsb__brand"
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-            gap: 8,
-            padding: "12px 8px",
-          }}
-        >
-          <img
-            src="/ekronos.png"
-            alt="EkronOS"
-            width={96}
-            height={96}
-            style={{ display: "block", objectFit: "contain" }}
-          />
-
-          <div className="dsb__brandMeta" style={{ textAlign: "center", lineHeight: 1.1 }}>
-            <div className="dsb__brandText" style={{ fontWeight: 700 }}>
-              EkronOS
-            </div>
-            <div className="dsb__brandSub" style={{ opacity: 0.8, fontSize: 12 }}>
-              Economic OS
-            </div>
-          </div>
+        <div className="dsb__brand">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            className="dsb__mark"
+            aria-hidden="true"
+          >
+            <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z" />
+          </svg>
+          <div className="dsb__brandText">EkronOS</div>
         </div>
       </div>
 

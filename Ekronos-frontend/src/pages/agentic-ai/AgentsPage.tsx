@@ -1,16 +1,7 @@
-import Agents from "./Agents";
-import GitHubLoginFork from "./GitHubForkLogin";
-
+import GitHubLoginFork from './GitHubForkLogin';
 
 function AgentsPage() {
-
-
-
-  return (
-    <>
-      <GitHubLoginFork />
-
-    </>)
+  return <GitHubLoginFork />;
 }
 
 export { AgentsPage };

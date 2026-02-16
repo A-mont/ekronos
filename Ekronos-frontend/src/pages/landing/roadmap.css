@@ -1,9 +1,9 @@
 .rm {
-  width: 100vw;
-  margin-left: calc(50% - 50vw);
-  margin-right: calc(50% - 50vw);
+  width: 100%;
+  margin-left: 0;
+  margin-right: 0;
 
-  padding: 92px 0 120px;
+  padding: 72px 0 92px;
   background: #05080f;
   position: relative;
   overflow: hidden;
@@ -32,22 +32,22 @@
 .rm__head {
   text-align: center;
   max-width: 980px;
-  margin: 0 auto 64px;
+  margin: 0 auto 44px;
 }
 
 .rm__kicker {
   color: #22d3ee;
-  font-size: 14px;
+  font-size: 12px;
   letter-spacing: 0.18em;
   font-weight: 700;
   text-transform: uppercase;
-  margin-bottom: 18px;
+  margin-bottom: 12px;
 }
 
 .rm__title {
   margin: 0;
-  font-size: clamp(32px, 3.8vw, 52px);
-  font-weight: 850;
+  font-size: clamp(30px, 3.2vw, 44px);
+  font-weight: 700;
   letter-spacing: -0.03em;
   color: rgba(255, 255, 255, 0.95);
 }
@@ -56,19 +56,19 @@
 .rm__grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 26px;
+  gap: 16px;
 }
 
 /* cards */
 .rmCard {
-  padding: 30px 30px 28px;
+  padding: 22px 20px 18px;
   border-radius: 18px;
   background: rgba(255, 255, 255, 0.03);
   border: 1px solid rgba(255, 255, 255, 0.10);
   box-shadow: 0 24px 70px rgba(0, 0, 0, 0.55);
   position: relative;
   overflow: hidden;
-  min-height: 250px;
+  min-height: 190px;
 }
 
 /* subtle wash */
@@ -98,10 +98,10 @@
 .rmCard__phase {
   position: relative;
   color: rgba(148, 163, 184, 0.85);
-  font-size: 14px;
+  font-size: 12px;
   letter-spacing: 0.14em;
   font-weight: 750;
-  margin-bottom: 14px;
+  margin-bottom: 10px;
 }
 
 .rmCard--featured .rmCard__phase {
@@ -111,17 +111,17 @@
 .rmCard__title {
   position: relative;
   margin: 0;
-  font-size: 22px;
-  font-weight: 850;
+  font-size: 19px;
+  font-weight: 700;
   letter-spacing: -0.02em;
   color: rgba(255, 255, 255, 0.95);
 }
 
 .rmCard__desc {
   position: relative;
-  margin: 12px 0 0;
-  font-size: 18px;
-  line-height: 1.65;
+  margin: 8px 0 0;
+  font-size: 15px;
+  line-height: 1.5;
   color: rgba(148, 163, 184, 0.85);
   max-width: 30ch;
 }
@@ -129,17 +129,17 @@
 /* badge */
 .rmBadge {
   position: absolute;
-  left: 22px;
-  bottom: 20px;
+  left: 18px;
+  bottom: 16px;
 
   display: inline-flex;
   align-items: center;
   justify-content: center;
 
-  padding: 7px 12px;
+  padding: 6px 10px;
   border-radius: 999px;
 
-  font-size: 13px;
+  font-size: 12px;
   font-weight: 750;
 
   color: rgba(210, 255, 252, 0.92);
@@ -161,16 +161,16 @@
 
 @media (max-width: 640px) {
   .rm {
-    padding: 72px 0 84px;
+    padding: 56px 0 62px;
   }
 
   .rmCard {
-    padding: 26px 22px 22px;
+    padding: 18px 14px 14px;
     min-height: unset;
   }
 
   .rmCard__desc {
-    font-size: 16px;
+    font-size: 14px;
   }
 
   .rmBadge {

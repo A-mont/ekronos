@@ -20,3 +20,6 @@
 *.seed
 *.bak
 docker-compose.override.yml
+
+.venv
+.venv311

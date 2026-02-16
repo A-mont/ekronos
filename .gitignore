@@ -1,0 +1,10 @@
+# IDE
+.idea/
+.vscode/
+*.iml
+
+# Build and development artifacts
+dist/
+dev/
+**/dist/
+**/dev/

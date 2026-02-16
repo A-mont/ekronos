@@ -1,4 +1,5 @@
 import React from "react";
+import { Card } from '@/components/ui/card';
 import "./capabilities.css";
 
 type Capability = {
@@ -153,9 +154,9 @@ const items: Capability[] = [
 
 export const Capabilities = () => {
   return (
-    <section className="cap" id="features">
+    <section className="cap" id="features" data-reveal-section="cap">
       <div className="cap__inner">
-        <div className="cap__head">
+        <div className="cap__head reveal-will-change" data-reveal-item>
           <div className="cap__kicker">CAPABILITIES</div>
           <h2 className="cap__title">Everything you need to launch an economy</h2>
           <p className="cap__sub">
@@ -166,14 +167,14 @@ export const Capabilities = () => {
 
         <div className="cap__grid">
           {items.map((it) => (
-            <article className="capCard" key={it.title}>
+            <Card className="capCard reveal-will-change" key={it.title} data-reveal-item>
               <div className={`capIcon capIcon--${it.accent || "cyan"}`}>
                 {it.icon}
               </div>
 
               <h3 className="capCard__title">{it.title}</h3>
               <p className="capCard__desc">{it.desc}</p>
-            </article>
+            </Card>
           ))}
         </div>
       </div>
