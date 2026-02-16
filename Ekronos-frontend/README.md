@@ -1,22 +1,30 @@
-<p align="center">
-  <a href="https://gear-tech.io">
-    <img src="https://github.com/gear-tech/gear/blob/master/images/logo-grey.png" width="400" alt="GEAR">
-  </a>
-</p>
-<p align=center>
-    <a href="https://github.com/gear-tech/gear-js/blob/master/LICENSE"><img src="https://img.shields.io/badge/License-GPL%203.0-success"></a>
-</p>
-<hr>
+# EkronOS Frontend
 
-## Description
+Frontend application for **EkronOS**, built with **React + Vite**, designed to provide a fast, modern, and responsive interface for interacting with EkronOS programmable markets.
 
-A ready-made application template with a well-thought-out infrastructure for quickly turning the application on Gear blockchain.
+This frontend connects to EkronOS smart contracts and backend services to display live market data, liquidity metrics, incentives, and administrative controls.
 
-## Installation
+---
 
-Create new project based on this template:
+## ⚙️ Tech Stack
 
-```sh
-npx degit gear-foundation/dapps/frontend/templates/create-vara-app dApp
-cd dApp
+- **React**
+- **Vite**
+- **TypeScript** (optional)
+- **CSS / Tailwind / UI library**
+- **REST / WebSocket APIs**
+
+---
+
+## 🚀 Getting Started
+
+### 1. Install dependencies
+
+```bash
+yarn install
+```
+### 2. Start project
+
+```bash
+yarn start
 ```

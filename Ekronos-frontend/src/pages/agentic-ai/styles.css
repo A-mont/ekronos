@@ -905,9 +905,6 @@
 }
 
 
-/* ============================= */
-/*  PRIMARY RUN BUTTON (SENIOR)  */
-/* ============================= */
 
 .runPrimary{
   position: relative;
@@ -1004,4 +1001,155 @@
   background: rgba(255,255,255,0.08);
   border-color: rgba(255,255,255,0.12);
   color: rgba(255,255,255,0.35);
+}
+
+
+.panel-split {
+  display: grid;
+  grid-template-columns: 1.25fr 0.95fr;
+  gap: 14px;
+  align-items: start;
+}
+
+@media (max-width: 1100px) {
+  .panel-split {
+    grid-template-columns: 1fr;
+  }
+}
+
+.agent-panel {
+  border-radius: 18px;
+  padding: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background:
+    radial-gradient(1200px 400px at 10% 0%, rgba(59, 130, 246, 0.14), transparent 55%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.04), rgba(255, 255, 255, 0.02));
+  backdrop-filter: blur(10px);
+}
+
+.agent-panel-fin {
+  background:
+    radial-gradient(1200px 400px at 10% 0%, rgba(34, 197, 94, 0.14), transparent 55%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.04), rgba(255, 255, 255, 0.02));
+}
+
+.agent-panel-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  padding: 8px 8px 12px 8px;
+  gap: 10px;
+}
+
+.agent-panel-title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 800;
+  letter-spacing: 0.2px;
+}
+
+.agent-panel-sub {
+  font-size: 12px;
+}
+
+.panel-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 999px;
+  display: inline-block;
+  box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.06);
+}
+
+.panel-dot-dev {
+  background: #3b82f6;
+}
+
+.panel-dot-fin {
+  background: #22c55e;
+}
+
+.panel-grid {
+ 
+  padding: 4px;
+}
+
+.agent-panel .agent-card {
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  background: linear-gradient(180deg, rgba(11, 15, 23, 0.9), rgba(11, 15, 23, 0.75));
+}
+
+.agent-panel .agent-card:hover {
+  transform: translateY(-1px);
+  transition: transform 160ms ease, border-color 160ms ease;
+  border-color: rgba(255, 255, 255, 0.16);
+}
+
+/* === AGREGA ESTO AL FINAL de styles.css === */
+/* Objetivo: equipos ARRIBA/ABAJO sin alterar el tamaño original de .widget-grid ni .agent-card */
+
+.team-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+/* Contenedor “marco” que NO cambia el sizing de las cards */
+.team-panel {
+  border-radius: 18px;
+  padding: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.03), rgba(255, 255, 255, 0.015));
+}
+
+/* Encabezado */
+.team-panel-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 6px 6px 10px 6px;
+}
+
+.team-panel-title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 800;
+  letter-spacing: 0.2px;
+}
+
+.team-panel-sub {
+  font-size: 12px;
+}
+
+/* Puntitos por equipo */
+.team-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 999px;
+  display: inline-block;
+  box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.06);
+}
+
+.team-dot-dev {
+  background: #3b82f6;
+}
+
+.team-dot-fin {
+  background: #22c55e;
+}
+
+
+.team-panel-dev {
+  background:
+    radial-gradient(900px 280px at 10% 0%, rgba(59, 130, 246, 0.12), transparent 60%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.03), rgba(255, 255, 255, 0.015));
+}
+
+.team-panel-fin {
+  background:
+    radial-gradient(900px 280px at 10% 0%, rgba(34, 197, 94, 0.12), transparent 60%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.03), rgba(255, 255, 255, 0.015));
 }
