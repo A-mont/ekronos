@@ -11,7 +11,10 @@ import {
   FiDroplet,
   FiFlag,
 } from "react-icons/fi";
+
 import Agents from "../agentic-ai/Agents";
+import DeployToken from "../agentic-ai/DeployToken"; 
+import CreatePairRiverDex from "../agentic-ai/CreatePairRiverDex";
 
 type StepId = 0 | 1 | 2 | 3 | 4 | 5 | 6;
 
@@ -79,11 +82,9 @@ export const CreateNewProject = () => {
   }
 
   function generateEconomyAndGoToStep4() {
-
     const payload: GenerationPayload = {
       createdAt: Date.now(),
       form: { ...form },
-
     };
 
     setGenerationPayload(payload);
@@ -174,9 +175,7 @@ export const CreateNewProject = () => {
                   rows={7}
                 />
               </div>
-              <div className="cnpHint">
-                Tip: include target users, core utility, and how the economy sustains value.
-              </div>
+              <div className="cnpHint">Tip: include target users, core utility, and how the economy sustains value.</div>
             </div>
           </div>
         )}
@@ -310,55 +309,52 @@ export const CreateNewProject = () => {
           </div>
         )}
 
-        {/* STEP 4: AI Vara Agentic System (placeholder) */}
+        {/* STEP 4: AI Vara Agentic System */}
         {step === 3 && (
           <div className="cnpSection">
             <div className="cnpPlaceholder">
               <div className="cnpPlaceholder__head">
                 <div>
                   <div className="cnpPlaceholder__title">AI Vara Agentic System</div>
-                  <div className="cnpPlaceholder__sub">
-                    Mount your orchestrator UI here. You already have a generation payload ready.
-                  </div>
+                  <div className="cnpPlaceholder__sub">Mount your orchestrator UI here. You already have a generation payload ready.</div>
                 </div>
-                <span className="cnpTag">Placeholder</span>
+                <span className="cnpTag">Agentic</span>
               </div>
 
               <div className="cnpPlaceholder__body">
-                {generationPayload && <Agents payload={generationPayload} />}
-
-
+                {generationPayload ? (
+                  <Agents payload={generationPayload} />
+                ) : (
+                  <div className="cnpEmpty">No payload. Go back and Generate Economy first.</div>
+                )}
 
                 <div className="cnpCodeHint">
                   <div className="cnpCodeHint__title">Available payload</div>
-                  <pre className="cnpCodeHint__pre">
-                    {JSON.stringify(generationPayload, null, 2)}
-                  </pre>
+                  <pre className="cnpCodeHint__pre">{JSON.stringify(generationPayload, null, 2)}</pre>
                 </div>
               </div>
             </div>
           </div>
         )}
 
-        {/* STEP 5: Deploy Token (placeholder) */}
+        {/* STEP 5: Deploy Token (Publish token contract) */}
         {step === 4 && (
           <div className="cnpSection">
             <div className="cnpPlaceholder">
               <div className="cnpPlaceholder__head">
                 <div>
                   <div className="cnpPlaceholder__title">Deploy Token</div>
-                  <div className="cnpPlaceholder__sub">
-                    Add your deployment component here (contract upload, instantiate, confirmations).
-                  </div>
+                  <div className="cnpPlaceholder__sub">Publish token contract</div>
                 </div>
-                <span className="cnpTag">Placeholder</span>
+                <span className="cnpTag">Deploy</span>
               </div>
 
               <div className="cnpPlaceholder__body">
-               
-                <div className="cnpEmpty">
-                  This area is reserved for your token deployment flow.
-                </div>
+                {generationPayload ? (
+                  <DeployToken payload={generationPayload} />
+                ) : (
+                  <div className="cnpEmpty">No payload. Go back and Generate Economy first.</div>
+                )}
               </div>
             </div>
           </div>
@@ -371,19 +367,13 @@ export const CreateNewProject = () => {
               <div className="cnpPlaceholder__head">
                 <div>
                   <div className="cnpPlaceholder__title">Create Pool on RivrDEX</div>
-                  <div className="cnpPlaceholder__sub">
-                    Add your pool creation + liquidity seeding component here.
-                  </div>
+                  <div className="cnpPlaceholder__sub">Add your pool creation + liquidity seeding component here.</div>
                 </div>
-                <span className="cnpTag">Placeholder</span>
+               <CreatePairRiverDex/>
               </div>
 
               <div className="cnpPlaceholder__body">
-                {/* ✅ Drop your component here later */}
-                {/* <CreatePool payload={generationPayload} onCreated={(poolResult)=>...} /> */}
-                <div className="cnpEmpty">
-                  This area is reserved for your RivrDEX pool creation flow.
-                </div>
+                <div className="cnpEmpty">This area is reserved for your RivrDEX pool creation flow.</div>
               </div>
             </div>
           </div>
