@@ -8,3 +8,8 @@ dist/
 dev/
 **/dist/
 **/dev/
+
+# Environment files
+**/.env
+**/.env.*
+!Ekronos-frontend/.env.txt
